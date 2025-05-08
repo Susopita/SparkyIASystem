@@ -5,7 +5,9 @@ import io.reflectoring.sparky.restriccion.domain.Restriccion;
 import io.reflectoring.sparky.solicitud.domain.Solicitud;
 import io.reflectoring.sparky.usuario.domain.Usuario;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,14 +21,12 @@ import java.util.List;
 @AllArgsConstructor
 public class Empresa {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     @Column(nullable = false)
     private String nombre;
 
-    @Column(nullable = false, unique = true)
+    @Id
+    @Column(name = "ruc", nullable = false, unique = true, length = 11)
+    @NotBlank(message = "El RUC no puede estar vacío")
     private String ruc;
 
     @Column(name = "fecha_afiliacion", nullable = false)
