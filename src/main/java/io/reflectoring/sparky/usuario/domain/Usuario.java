@@ -1,6 +1,6 @@
 package io.reflectoring.sparky.usuario.domain;
 
-
+import io.reflectoring.sparky.auth.domain.Role;
 import io.reflectoring.sparky.empresa.domain.Empresa;
 import io.reflectoring.sparky.solicitud.domain.Solicitud;
 import jakarta.persistence.*;
@@ -11,8 +11,12 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Getter
@@ -22,7 +26,7 @@ import java.util.List;
 @Table(name = "usuarios")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipo_usuario", discriminatorType = DiscriminatorType.STRING)
-public class Usuario {
+public class Usuario implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,7 +38,7 @@ public class Usuario {
     private String nombre;
 
     @Column(nullable = false)
-    private String contraseña;
+    private String password;
 
     @Column(name = "fecha_creacion", nullable = false)
     private LocalDateTime fechaCreacion = LocalDateTime.now();
@@ -47,14 +51,54 @@ public class Usuario {
     @JoinColumn(name = "empresa_id")
     private Empresa empresa;
 
-//    // Límites específicos del usuario
-//    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<LimiteUsuario> limites = new ArrayList<>();
+    // // Límites específicos del usuario
+    // @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval =
+    // true)
+    // private List<LimiteUsuario> limites = new ArrayList<>();
 
     // Historial de solicitudes del usuario
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Solicitud> solicitudes = new ArrayList<>();
 
+    // Security implementation
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    private Boolean expired;
+
+    private Boolean locked;
+
+    private Boolean credentialsExpired;
+
+    private Boolean enable;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return !expired;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return !locked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return !credentialsExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enable;
+    }
 }
-
-

@@ -1,0 +1,9 @@
+{
+    "properties": [
+        {
+            "name": "my.awesome.secret",
+            "type": "java.lang.String",
+            "description": "Llave privada para JWT"
+        }
+    ]
+}
