@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import io.reflectoring.sparky.usuario.domain.Usuario;
 
 @Repository
-public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
-    Usuario findByEmail(String email);
+public interface UsuarioRepository<T extends Usuario> extends JpaRepository<T, Long> {
+    T findByEmail(String email);
 }
