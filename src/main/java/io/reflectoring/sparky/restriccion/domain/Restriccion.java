@@ -5,10 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-
-/**
- * Entidad que representa una restricción de uso de un modelo para una empresa.
- */
 @Entity
 @Table(name = "restricciones_empresa")
 @Getter
@@ -21,7 +17,6 @@ public class Restriccion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     /**
      * Empresa a la que aplica la restricción.
      */
