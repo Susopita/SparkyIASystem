@@ -25,6 +25,10 @@ public class Empresa {
     @Column(name = "ruc", nullable = false, unique = true, length = 11) // Asumiendo RUC de 11 dígitos
     private String ruc;
 
+    @NotBlank
+    @Column(name = "nombre", nullable = false)
+    private String nombre;
+
     @Column(name = "fecha_afiliacion", nullable = false)
     private LocalDate fechaAfiliacion;
 
