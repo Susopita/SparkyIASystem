@@ -24,7 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "usuarios")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "tipo_usuario", discriminatorType = DiscriminatorType.STRING)
 public class Usuario implements UserDetails {
     @Id
@@ -50,11 +50,6 @@ public class Usuario implements UserDetails {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "empresa_id")
     private Empresa empresa;
-
-    // // Límites específicos del usuario
-    // @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval =
-    // true)
-    // private List<LimiteUsuario> limites = new ArrayList<>();
 
     // Historial de solicitudes del usuario
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
