@@ -1,4 +1,11 @@
 package io.reflectoring.sparky.usuario.infrastructure;
 
-public interface UsuarioRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import io.reflectoring.sparky.usuario.domain.Usuario;
+
+@Repository
+public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+    Usuario findByEmail(String email);
 }
