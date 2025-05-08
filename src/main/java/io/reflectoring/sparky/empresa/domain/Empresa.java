@@ -5,6 +5,7 @@ import io.reflectoring.sparky.restriccion.domain.Restriccion;
 import io.reflectoring.sparky.solicitud.domain.Solicitud;
 import io.reflectoring.sparky.usuario.domain.Usuario;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -20,13 +21,8 @@ import java.util.List;
 public class Empresa {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false)
-    private String nombre;
-
-    @Column(nullable = false, unique = true)
+    @NotBlank
+    @Column(name = "ruc", nullable = false, unique = true, length = 11) // Asumiendo RUC de 11 dígitos
     private String ruc;
 
     @Column(name = "fecha_afiliacion", nullable = false)
