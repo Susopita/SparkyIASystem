@@ -16,21 +16,21 @@ public class SparkyAdminService {
         this.repository = repository;
     }
 
-    public SparkyAdmin create(SparkyAdmin sparkyAdmin) {
+    public SparkyAdmin create(Long empresaId, SparkyAdmin sparkyAdmin) {
         return repository.save(sparkyAdmin);
     }
 
-    public List<SparkyAdmin> findAll() {
+    public List<SparkyAdmin> findAll(Long empresaId) {
         return repository.findAll();
     }
 
-    public SparkyAdmin findById(Long id) {
+    public SparkyAdmin findById(Long id, Long adminId) {
         return repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "SparkyAdmin not found"));
     }
 
-    public SparkyAdmin update(Long id, SparkyAdmin updated) {
-        SparkyAdmin existing = findById(id);
+    public SparkyAdmin update(Long id, Long adminId, SparkyAdmin updated) {
+        SparkyAdmin existing = findById(id, adminId);
         existing.setNombre(updated.getUsername());
         existing.setEmail(updated.getEmail());
         existing.setPassword(updated.getPassword());
@@ -38,7 +38,8 @@ public class SparkyAdminService {
         return repository.save(existing);
     }
 
-    public void delete(Long id) {
-        repository.deleteById(id);
+    public void delete(Long empresaId, Long adminId) {
+        SparkyAdmin existing = findById(empresaId, adminId);
+        repository.delete(existing);
     }
 }

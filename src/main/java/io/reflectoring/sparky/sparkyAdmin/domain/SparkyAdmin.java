@@ -15,5 +15,5 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SparkyAdmin extends Usuario {
-
+    private Long empresaId;
 }
