@@ -1,50 +1,67 @@
 package io.reflectoring.sparky.restriccion.domain;
 
 import io.reflectoring.sparky.empresa.domain.Empresa;
-import io.reflectoring.sparky.modeloIA.domain.ModeloIA;
-import io.reflectoring.sparky.usuario.domain.Usuario;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 @Entity
-@Table(name = "restricciones")
+@Table(name = "restricciones_empresa")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Restriccion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "limite_uso", nullable = false)
-    private Integer limiteUso;  // Número máximo de solicitudes permitidas
-
-    @Column(name = "tokens_maximos")
-    private Integer tokensMaximos;  // Límite opcional de tokens por ventana de tiempo
-
-    @Column(name = "ventana_tiempo", nullable = false)
-    private String ventanaTiempo;  // Ejemplo: "1h", "24h", "7d"
-
-    @Column(name = "numero_solicitudes", nullable = false)
-    private int numeroSolicitudes;
-
-    @Column(name = "activo", nullable = false)
-    private boolean activo = true;
-
-    // Relación con Empresa (usando RUC como FK)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "empresa_ruc", referencedColumnName = "ruc", nullable = false)
+    /**
+     * Empresa a la que aplica la restricción.
+     */
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "empresa_id", nullable = false)
     private Empresa empresa;
 
-    // Relación con ModeloIA (nombre como FK)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "modelo_ia_nombre", referencedColumnName = "nombre", nullable = false)
-    private ModeloIA modeloIA;
+    /**
+     * Identificador del modelo (e.g., "openai-chat", "meta-multimodal").
+     */
+    @Column(name = "tipo_modelo", nullable = false)
+    private String tipoModelo;
 
-    // Relación con Usuario (opcional, para límites específicos)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id", referencedColumnName = "id")
-    private Usuario usuario;
+    /**
+     * Número máximo de solicitudes permitidas en la ventana de tiempo.
+     */
+    @Column(name = "max_solicitudes")
+    private Long maxSolicitudes;
+
+    /**
+     * Número máximo de tokens permitidos en la ventana de tiempo.
+     */
+    @Column(name = "max_tokens")
+    private Long maxTokens;
+
+    /**
+     * Duración de la ventana de tiempo en segundos.
+     */
+    @Column(name = "ventana_tiempo_segundos", nullable = false)
+    private Long ventanaTiempoSegundos;
+
+    /**
+     * Marca de tiempo de creación.
+     */
+    @Column(name = "fecha_creacion", nullable = false, updatable = false)
+    private LocalDateTime fechaCreacion = LocalDateTime.now();
+
+    /**
+     * Marca de tiempo de última actualización.
+     */
+    @Column(name = "fecha_actualizacion", nullable = false)
+    private LocalDateTime fechaActualizacion = LocalDateTime.now();
+
+    @PreUpdate
+    private void onUpdate() {
+        this.fechaActualizacion = LocalDateTime.now();
+    }
 }
