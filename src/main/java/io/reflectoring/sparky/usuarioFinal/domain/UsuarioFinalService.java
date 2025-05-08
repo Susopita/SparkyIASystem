@@ -16,16 +16,22 @@ import com.azure.ai.inference.models.ChatRequestUserMessage;
 import com.azure.core.credential.AzureKeyCredential;
 
 import io.reflectoring.sparky.modeloIA.domain.ModeloIA;
+import io.reflectoring.sparky.modeloIA.infrastructure.ModeloIARepository;
 import io.reflectoring.sparky.solicitud.domain.Solicitud;
+import io.reflectoring.sparky.usuarioFinal.infrastructure.UsuarioFinalRepository;
 
 @Service
 public class UsuarioFinalService {
     private final ChatCompletionsClient client;
+    private final ModeloIARepository modeloIARepository;
+    private final UsuarioFinalRepository usuarioFinalRepository;
 
     @Value("${azure.key}")
     private String key;
 
-    public UsuarioFinalService() {
+    public UsuarioFinalService(UsuarioFinalRepository usuarioFinalRepository, ModeloIARepository modeloIARepository) {
+        this.usuarioFinalRepository = usuarioFinalRepository;
+        this.modeloIARepository = modeloIARepository;
         String endpoint = "https://models.github.ai/inference";
 
         this.client = new ChatCompletionsClientBuilder()
@@ -86,10 +92,10 @@ public class UsuarioFinalService {
     }
 
     public List<ModeloIA> obtenerModelos() {
-        return List.of(ModeloIA.GPT_4_1_NANO, ModeloIA.TEXT_DAVINCI_003);
+        return modeloIARepository.findAll();
     }
 
     public List<Solicitud> obtenerHistorial() {
-        return null;
+        return usuarioFinalRepository.;
     }
 }
